@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+    database:
+        image: postgres
+        container_name: database_worldapp
+        restart: always
+        ports: 
+            - 5432:5432
+        environment: 
+            - POSTGRES_USER=docker
+            - POSTGRES_PASSWORD=vojo
+            - POSTGRES_DB=worldapp
+        volumes: 
+            - pgdata:/data/postgres
+    app:
+        build: .
+        container_name: worldapp
+        ports: 
+            - 8080:8080
+        volumes: 
+            - .:/user/app
+        links:
+            - database
+        depends_on: 
+            - database
+
+volumes: 
+    pgdata:
+        driver: local
