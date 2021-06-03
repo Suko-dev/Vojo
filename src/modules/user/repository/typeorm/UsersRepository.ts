@@ -19,6 +19,10 @@ class UsersRepository implements IUsersRepository {
         const user = this.repository.findOne({ email });
         return user;
     }
+    async findByUsername(username: string): Promise<User | undefined> {
+        const user = this.repository.findOne({ username });
+        return user;
+    }
     async update({
         email,
         username,
