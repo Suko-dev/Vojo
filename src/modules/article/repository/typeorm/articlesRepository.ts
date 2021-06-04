@@ -1,6 +1,7 @@
 import { container } from "tsyringe";
 import { getRepository, Repository } from "typeorm";
 
+import { Favorite } from "../../../favorite/entity/Favorite";
 import { GetUserUseCase } from "../../../user/usecase/getUser/getUserUseCase";
 import { IResponseArticleDTO } from "../../dtos/IResponseArticleDTO";
 import { IUpdateArticleDTO } from "../../dtos/IUpdateArticleDTO";
@@ -33,17 +34,24 @@ class ArticlesRepository implements IArticlesRepository {
         let limit = 20;
         let offset = 0;
 
-        /* if (favorited) {
-            Object.assign(query, { favorited });
-        }
-        if (tag) {
+        /* if (tag) {
             Object.assign(query, { tag });
         } */
 
         const builder = this.articleRepository.createQueryBuilder("articles");
+        console.log(favorited);
+        if (favorited) {
+            builder
+                .leftJoinAndSelect(
+                    Favorite,
+                    "favorite",
+                    "favorite.slug = articles.slug"
+                )
+                .andWhere(`favorite.email = '${favorited}'`);
+        }
 
         if (author) {
-            builder.where(`author_email = '${author}'`);
+            builder.where(`articles.author_email = '${author}'`);
         }
 
         if (pageLimit) {
@@ -117,15 +125,5 @@ class ArticlesRepository implements IArticlesRepository {
     async delete(slug: string): Promise<void> {
         await this.articleRepository.delete({ slug });
     }
-    async favorite(slug: string, email: string): Promise<IResponseArticleDTO> {
-        throw new Error("Method not implemented.");
-    }
-    async unFavorite(
-        slug: string,
-        email: string
-    ): Promise<IResponseArticleDTO> {
-        throw new Error("Method not implemented.");
-    }
 }
-
 export { ArticlesRepository };

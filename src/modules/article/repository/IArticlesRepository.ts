@@ -25,8 +25,6 @@ interface IArticlesRepository {
     isAuthor(slug: string, email: string): Promise<boolean>;
     update(data: IUpdateArticleDTO): Promise<IResponseArticleDTO | undefined>;
     delete(slug: string): Promise<void>;
-    favorite(slug: string, email: string): Promise<IResponseArticleDTO>;
-    unFavorite(slug: string, email: string): Promise<IResponseArticleDTO>;
 }
 
 export { IArticlesRepository };
