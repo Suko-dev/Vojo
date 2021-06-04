@@ -10,13 +10,13 @@ class GetProfileController {
 
         const { username } = request.params;
         const { email } = request.user;
-        let user: IResponseProfileDTO;
+        let profile: IResponseProfileDTO | undefined;
         try {
-            user = await getProfileUseCase.execute(String(username), email);
+            profile = await getProfileUseCase.execute(String(username), email);
         } catch (error) {
-            return response.status(500).json({ error: error.message });
+            return response.status(400).json(error.message);
         }
-        return response.status(200).json(user);
+        return response.status(200).json(profile);
     }
 }
 export { GetProfileController };

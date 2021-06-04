@@ -14,7 +14,8 @@ class GetUserUseCase {
         if (!token) {
             throw new Error("unnautorized");
         }
-        Object.assign(user, token);
+
+        Object.assign(user, { token });
 
         return user as IResponseUserDTO;
     }

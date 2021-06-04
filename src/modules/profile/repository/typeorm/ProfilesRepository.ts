@@ -1,16 +1,16 @@
 import { getRepository, Repository } from "typeorm";
 
-import { Like } from "../../entity/Like";
+import { Follow } from "../../entity/Follow";
 import { IProfilesRepository } from "../IProfilesRepository";
 
 class ProfilesRepository implements IProfilesRepository {
-    private likeRepository: Repository<Like>;
+    private followRepository: Repository<Follow>;
     constructor() {
-        this.likeRepository = getRepository(Like);
+        this.followRepository = getRepository(Follow);
     }
     async ifFollowing(email: string, username: string): Promise<boolean> {
-        const isFollowing = await this.likeRepository
-            .createQueryBuilder("likes")
+        const isFollowing = await this.followRepository
+            .createQueryBuilder("follows")
             .where(`follower = '${email}' and followed = '${username}'`)
             .getOne();
         if (!isFollowing) {
@@ -19,19 +19,17 @@ class ProfilesRepository implements IProfilesRepository {
         return true;
     }
     async follow(email: string, username: string): Promise<boolean> {
-        const isFollowing = await this.likeRepository
-            .createQueryBuilder("likes")
+        const isFollowing = await this.followRepository
+            .createQueryBuilder("follows")
             .where(`follower = '${email}' and followed = '${username}'`)
             .getOne();
-        console.log(isFollowing);
         try {
             if (!isFollowing) {
-                const follow = this.likeRepository.create({
+                const follow = this.followRepository.create({
                     follower: email,
                     followed: username,
                 });
-                console.log(follow);
-                await this.likeRepository.save(follow);
+                await this.followRepository.save(follow);
             }
             return true;
         } catch (error) {
@@ -39,12 +37,12 @@ class ProfilesRepository implements IProfilesRepository {
         }
     }
     async unFollow(email: string, username: string): Promise<boolean> {
-        const isFollowing = await this.likeRepository
-            .createQueryBuilder("likes")
+        const isFollowing = await this.followRepository
+            .createQueryBuilder("follows")
             .where(`follower = '${email}' and followed = '${username}'`)
             .getOne();
         if (isFollowing) {
-            this.likeRepository
+            this.followRepository
                 .createQueryBuilder()
                 .delete()
                 .where(`follower = '${email}' and followed = '${username}'`)

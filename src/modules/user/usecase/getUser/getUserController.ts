@@ -8,13 +8,13 @@ class GetUserController {
     async handle(request: Request, response: Response): Promise<Response> {
         const getUserUseCase = container.resolve(GetUserUseCase);
 
-        const { email } = request.user;
-        const token = request.headers.authorization;
-        let user: IResponseUserDTO;
+        const { email, token } = request.user;
+        let user: IResponseUserDTO | undefined;
+
         try {
-            user = await getUserUseCase.execute(email, String(token));
+            user = await getUserUseCase.execute(String(email), String(token));
         } catch (error) {
-            return response.status(500).json({ error: error.message });
+            return response.status(400).json(error.message);
         }
         return response.status(200).json(user);
     }

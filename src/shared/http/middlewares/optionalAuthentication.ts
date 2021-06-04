@@ -7,7 +7,7 @@ import { UsersRepository } from "../../../modules/user/repository/typeorm/UsersR
 interface IPayload {
     sub: string;
 }
-export async function authentication(
+export async function optionalAuthentication(
     request: Request,
     response: Response,
     next: NextFunction
@@ -15,19 +15,17 @@ export async function authentication(
     const authHeader = request.headers.authorization;
 
     try {
-        if (!authHeader) {
-            throw new Error("Token missing");
-        }
+        if (authHeader) {
+            const [, token] = authHeader.split(" ");
+            const { sub } = verify(token, auth.secret_token) as IPayload;
 
-        const [, token] = authHeader.split(" ");
-        const { sub } = verify(token, auth.secret_token) as IPayload;
-
-        const usersRepository = new UsersRepository();
-        const user = await usersRepository.findByEmail(sub);
-        if (!user) {
-            throw new Error("user not found");
+            const usersRepository = new UsersRepository();
+            const user = await usersRepository.findByEmail(sub);
+            if (!user) {
+                throw new Error("user not found");
+            }
+            request.user = { email: user.email, token };
         }
-        request.user = { email: user.email, token };
         next();
     } catch (error) {
         next(error);

@@ -4,7 +4,7 @@ export class CreateLikes1622748032307 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(
             new Table({
-                name: "likes",
+                name: "follows",
                 columns: [
                     {
                         name: "id",
@@ -22,7 +22,7 @@ export class CreateLikes1622748032307 implements MigrationInterface {
                 ],
                 foreignKeys: [
                     {
-                        name: "fkFollowerLike",
+                        name: "fkFollower",
                         referencedTableName: "users",
                         referencedColumnNames: ["email"],
                         columnNames: ["follower"],
@@ -30,7 +30,7 @@ export class CreateLikes1622748032307 implements MigrationInterface {
                         onUpdate: "CASCADE",
                     },
                     {
-                        name: "fkFollowedLike",
+                        name: "fkFollowed",
                         referencedTableName: "users",
                         referencedColumnNames: ["username"],
                         columnNames: ["followed"],

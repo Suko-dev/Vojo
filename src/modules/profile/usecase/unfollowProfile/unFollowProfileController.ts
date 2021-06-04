@@ -12,14 +12,14 @@ class UnFollowProfileController {
 
         const { username } = request.params;
         const { email } = request.user;
-        let user: IResponseProfileDTO;
+        let user: IResponseProfileDTO | undefined;
         try {
             user = await unFollowProfileUseCase.execute(
                 String(username),
                 String(email)
             );
         } catch (error) {
-            return response.status(500).json({ error: error.message });
+            return response.status(400).json(error.message);
         }
         return response.status(200).json(user);
     }

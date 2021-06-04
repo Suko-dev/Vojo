@@ -1,8 +1,8 @@
 import { Column, Entity, PrimaryColumn } from "typeorm";
 import { v4 as uuid } from "uuid";
 
-@Entity("likes")
-class Like {
+@Entity("follows")
+class Follow {
     @PrimaryColumn()
     id: string;
 
@@ -19,4 +19,4 @@ class Like {
     }
 }
 
-export { Like };
+export { Follow };
