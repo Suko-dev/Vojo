@@ -43,7 +43,6 @@ class ArticlesRepository implements IArticlesRepository {
         const builder = this.articleRepository.createQueryBuilder("articles");
 
         if (author) {
-            console.log(typeof author);
             builder.where(`author_email = '${author}'`);
         }
 
@@ -58,7 +57,6 @@ class ArticlesRepository implements IArticlesRepository {
         try {
             articles = await builder.getMany();
         } catch (error) {
-            console.log(error.message);
             throw new Error(error);
         }
         return articles;
@@ -67,8 +65,11 @@ class ArticlesRepository implements IArticlesRepository {
         slug: string,
         email?: string
     ): Promise<IResponseArticleDTO> {
-        const article = await this.articleRepository.findOneOrFail(slug);
-        return article;
+        const article = await this.articleRepository.findOne(slug, {
+            where: { slug },
+            relations: ["user"],
+        });
+        return article as Article;
     }
     async create(
         title: string,

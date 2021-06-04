@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import express, { NextFunction, Request, Response } from "express";
+import express from "express";
 
 import dbConnection from "./database/typeorm";
 import { router } from "./shared/http/routes";
@@ -12,14 +12,5 @@ app.use(express.json());
 dbConnection("localhost");
 
 app.use("/api", router);
-app.use(
-    (
-        error: Error,
-        request: Request,
-        response: Response,
-        next: NextFunction
-    ) => {
-        response.status(500).json({ error, message: error.message });
-    }
-);
+
 export { app };

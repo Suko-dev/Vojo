@@ -16,10 +16,10 @@ class GetArticleController {
         let article: IResponseArticleDTO | undefined;
         try {
             article = await getArticleUseCase.execute(slug, email);
+            return response.status(200).json(article);
         } catch (error) {
             return response.status(400).json(error.message);
         }
-        return response.status(201).json(article);
     }
 }
 export { GetArticleController };

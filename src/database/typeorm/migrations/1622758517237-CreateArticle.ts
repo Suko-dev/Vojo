@@ -8,7 +8,7 @@ export class CreateArticle1622758517237 implements MigrationInterface {
                 columns: [
                     {
                         name: "slug",
-                        type: "varchar",
+                        type: "uuid",
                         isPrimary: true,
                     },
                     {
